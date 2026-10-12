@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CODE SPRINT — Judge / Admin</title>
+<script>(function(){try{var t=localStorage.getItem('cs-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="nav">
+  <a class="brand" href="/admin.html"><span class="brand-mark" data-brand-mark></span><span class="brand-text">CODE SPRINT</span></a>
+  <span class="badge warn">ADMIN</span>
+  <nav class="nav-links">
+    <a class="link" href="/" target="_blank"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Viewers</a>
+  </nav>
+  <div class="nav-right">
+    <button class="icon-btn theme-toggle" type="button"></button>
+    <button class="btn ghost small" onclick="logout()">Logout</button>
+    <button class="icon-btn nav-burger" type="button" aria-label="Menu"></button>
+  </div>
+</div>
+
+<div class="container wide">
+  <!-- LOGIN -->
+  <div id="adminLogin" class="card center-screen" style="min-height:0;">
+    <form id="adminLoginForm" class="auth-card" style="max-width:400px;">
+      <div class="row"><span class="ic">🛡️</span><h3 style="margin:0">Judge / Admin Login</h3></div>
+      <label>Username</label>
+      <input id="adminUser" autocomplete="username" required />
+      <label>Password</label>
+      <input id="adminPass" type="password" autocomplete="current-password" required />
+      <div style="height:16px"></div>
+      <button class="btn block" type="submit">Open Dashboard</button>
+      <div id="adminLoginErr" class="small-muted" style="color:var(--red); margin-top:10px;"></div>
+    </form>
+  </div>
+
+  <!-- APP -->
+  <div id="adminApp" class="hidden">
+    <div class="row" style="margin-bottom:14px;">
+      <span class="ic">🛡️</span>
+      <h2 style="margin:0">Judge / Admin Dashboard</h2>
+      <span class="right small-muted" id="adminRole"></span>
+    </div>
+    <div class="card" style="margin-bottom:16px;" id="timerCard">
+      <div class="cols-4 grid">
+        <div class="stat"><span class="label">Status</span><span class="value small" id="stStatus">—</span></div>
+        <div class="stat"><span class="label">Phase</span><span class="value small" id="stPhase">—</span></div>
+        <div class="stat"><span class="label">Phase Ends In</span><span class="timer" id="stTimer" style="font-size:20px;">--:--:--</span></div>
+        <div class="stat"><span class="label">Rounds</span><span id="stRounds"></span></div>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="overview">📋 Overview</button>
+      <button class="tab" data-tab="teams">👥 Teams</button>
+      <button class="tab" data-tab="questions">📝 Questions</button>
+      <button class="tab" data-tab="leaderboard">🏆 Leaderboard</button>
+      <button class="tab" data-tab="activity">🚩 Activity</button>
+      <button class="tab" data-tab="settings">⚙️ Settings</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="panel" id="tab-overview">
+      <div class="row">
+        <span class="ic">👥</span>
+        <h3 style="margin:0">All Teams</h3>
+        <span class="right small-muted" id="ovStats"></span>
+      </div>
+      <div style="height:12px"></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Rank</th><th>Team</th><th>Score</th><th>Solved</th><th>Subs</th><th>Hints</th><th>Flags</th><th>Last Activity</th><th></th></tr></thead>
+          <tbody id="ovBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TEAMS -->
+    <div class="panel hidden" id="tab-teams">
+      <div class="grid cols-2 stagger">
+        <div class="card">
+          <div class="section-head"><span class="ic">➕</span><h4 style="margin:0">Add Team</h4></div>
+          <label>Team ID</label><input id="newTeamCode" placeholder="T37" />
+          <label>Team Name</label><input id="newTeamName" placeholder="Team Phoenix" />
+          <label>Password</label><input id="newTeamPass" placeholder="sprint123" />
+          <div style="height:12px"></div>
+          <button class="btn small" onclick="addTeam()">Add Team</button>
+        </div>
+        <div class="card">
+          <div class="section-head"><span class="ic">⚙️</span><h4 style="margin:0">Bulk Generate</h4></div>
+          <label>Count</label><input id="bulkCount" type="number" value="10" min="1" max="50" />
+          <label>ID Prefix</label><input id="bulkPrefix" value="T" />
+          <label>Name Prefix</label><input id="bulkNamePrefix" value="Team " />
+          <label>Password</label><input id="bulkPass" value="sprint123" />
+          <div style="height:12px"></div>
+          <button class="btn small" onclick="bulkTeams()">Generate</button>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>ID</th><th>Name</th><th>Score</th><th>Active</th><th></th></tr></thead>
+          <tbody id="teamBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="panel hidden" id="tab-questions">
+      <div class="row">
+        <button class="btn" onclick="openQuestionForm(null)">＋ New Question</button>
+        <div class="right" id="qFilterBtn"></div>
+      </div>
+      <div style="height:14px"></div>
+      <div id="qList"></div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="panel hidden" id="tab-leaderboard">
+      <div class="row">
+        <button class="btn" id="freezeBtn" onclick="toggleFreeze()">Toggle Freeze</button>
+        <button class="btn ghost" id="publishBtn" onclick="togglePublish()">Toggle Results</button>
+        <span class="right small-muted" id="lbHint"></span>
+      </div>
+      <div style="height:14px"></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Rank</th><th>Team</th><th>Score</th><th>Solved</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+          <tbody id="lbBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div class="panel hidden" id="tab-activity">
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Time</th><th>Team</th><th>Type</th><th>Detail</th><th>Flag</th></tr></thead>
+          <tbody id="actBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel hidden" id="tab-settings">
+      <div class="grid cols-2 stagger">
+        <div class="card">
+          <div class="section-head"><span class="ic">🎛️</span><h4 style="margin:0">Competition Control</h4></div>
+          <label>Status</label>
+          <select id="setStatus">
+            <option value="not_started">Not Started</option>
+            <option value="live">Live</option>
+            <option value="finished">Finished</option>
+          </select>
+          <label>Public Announcement Message</label>
+          <input id="setMessage" placeholder="e.g. Welcome to Code Sprint!" />
+          <div style="height:12px"></div>
+          <button class="btn small" onclick="saveConfig()">Save Status & Message</button>
+          <div style="height:12px"></div>
+          <button class="btn red small" onclick="resetDb()">⚠ Reset Database & Re-seed</button>
+        </div>
+        <div class="card">
+          <div class="section-head"><span class="ic">🗓️</span><h4 style="margin:0">Round Schedule</h4></div>
+          <div id="scheduleForm"></div>
+          <div style="height:12px"></div>
+          <button class="btn small" onclick="saveSchedule()">Save Schedule</button>
+          <p class="small-muted">Server time: <span id="serverClock"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="modalHost"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

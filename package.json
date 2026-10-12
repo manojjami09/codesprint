@@ -1,0 +1,20 @@
+{
+  "name": "code-sprint",
+  "version": "1.0.0",
+  "description": "CODE SPRINT - timed multi-round competitive coding contest platform",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seed.js",
+    "reset": "node seed.js --reset"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "connect-sqlite3": "^0.9.15",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "socket.io": "^4.8.1"
+  }
+}

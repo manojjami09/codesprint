@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CODE SPRINT — Final Results</title>
+<script>(function(){try{var t=localStorage.getItem('cs-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="nav">
+  <a class="brand" href="/dashboard.html"><span class="brand-mark" data-brand-mark></span><span class="brand-text">CODE SPRINT</span></a>
+  <nav class="nav-links">
+    <a class="link" href="/dashboard.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.6"/><rect x="14" y="3" width="7" height="5" rx="1.6"/><rect x="14" y="12" width="7" height="9" rx="1.6"/><rect x="3" y="16" width="7" height="5" rx="1.6"/></svg>Dashboard</a>
+    <a class="link" href="/leaderboard.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V12M12 20V4M18 20V9"/></svg>Leaderboard</a>
+    <a class="link active" href="/results.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></svg>Results</a>
+  </nav>
+  <div class="nav-right">
+    <button class="icon-btn theme-toggle" type="button"></button>
+    <a class="btn ghost small" href="/">Login</a>
+    <button class="icon-btn nav-burger" type="button" aria-label="Menu"></button>
+  </div>
+</div>
+<div class="container">
+  <div id="notPublished" class="card big-banner">
+    <div class="trophy">🏆</div>
+    <h2>CODE SPRINT — FINAL RESULTS</h2>
+    <p class="small-muted">Results have not been published yet. The organizers will release them after verification.</p>
+    <p class="small-muted" id="rsStatus"></p>
+  </div>
+
+  <div id="published" class="hidden">
+    <div class="card big-banner" style="margin-bottom:18px;">
+      <div class="trophy">🏆</div>
+      <h2>CODE SPRINT — FINAL RESULTS</h2>
+      <div id="podium" class="row" style="justify-content:center; gap:24px; margin-top:12px;"></div>
+    </div>
+    <div class="card">
+      <div class="section-head"><span class="ic">📋</span><h3 style="margin:0">Final Leaderboard</h3><span class="badge closed right">FROZEN</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Rank</th><th>Team</th><th>Final Score</th><th>Round 1</th><th>Round 2</th><th>Round 3</th></tr></thead>
+          <tbody id="rsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/results.js"></script>
+</body>
+</html>

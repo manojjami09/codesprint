@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+data/*.log
+data/server.log
+data/server.err.log
+.git
+.gitignore
+start.bat

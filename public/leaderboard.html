@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CODE SPRINT — Live Leaderboard</title>
+<script>(function(){try{var t=localStorage.getItem('cs-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="nav">
+  <a class="brand" href="/dashboard.html"><span class="brand-mark" data-brand-mark></span><span class="brand-text">CODE SPRINT</span></a>
+  <nav class="nav-links">
+    <a class="link" href="/dashboard.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.6"/><rect x="14" y="3" width="7" height="5" rx="1.6"/><rect x="14" y="12" width="7" height="9" rx="1.6"/><rect x="3" y="16" width="7" height="5" rx="1.6"/></svg>Dashboard</a>
+    <a class="link active" href="/leaderboard.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V12M12 20V4M18 20V9"/></svg>Leaderboard</a>
+    <a class="link" href="/results.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></svg>Results</a>
+  </nav>
+  <div class="nav-right">
+    <div class="nav-extra" id="lgStatusBadge"></div>
+    <button class="icon-btn theme-toggle" type="button"></button>
+    <button class="btn ghost small" onclick="logout()">Logout</button>
+    <button class="icon-btn nav-burger" type="button" aria-label="Menu"></button>
+  </div>
+</div>
+<div class="container">
+  <div class="card glow-border">
+    <div class="row">
+      <span class="ic">📊</span>
+      <h2 style="margin:0">Live Leaderboard</h2>
+      <span class="timer" id="lgTimer" style="font-size:18px;">--:--:--</span>
+      <span class="right"><span class="small-muted" id="lgUpdated"></span></span>
+    </div>
+    <div id="lgFrozen" class="hidden" style="margin-top:10px;">
+      <span class="badge closed">SCORES FROZEN — Final rankings locked.</span>
+    </div>
+    <div style="height:10px"></div>
+    <div class="table-wrap">
+      <table class="table" id="lgTable">
+        <thead><tr><th>Rank</th><th>Team</th><th>Score</th><th>Solved</th></tr></thead>
+        <tbody id="lgBody"></tbody>
+      </table>
+    </div>
+    <p class="small-muted" style="margin-top:12px;">Leaderboard refreshes automatically whenever scores change.</p>
+  </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/leaderboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CODE SPRINT — Team Login</title>
+<script>(function(){try{var t=localStorage.getItem('cs-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="nav">
+  <a class="brand" href="/dashboard.html"><span class="brand-mark" data-brand-mark></span><span class="brand-text">CODE SPRINT</span></a>
+  <div class="nav-right">
+    <button class="icon-btn theme-toggle" type="button"></button>
+    <a class="btn ghost small" href="/leaderboard.html">📊 Live Board</a>
+  </div>
+</div>
+
+<div class="center-screen">
+  <div class="auth-shell">
+    <div class="auth-showcase">
+      <div class="cube-stage"><div class="cube3d">
+        <div class="face f1">&lt;/&gt;</div>
+        <div class="face f2">{ }</div>
+        <div class="face f3">01</div>
+        <div class="face f4">( )</div>
+        <div class="face f5">#</div>
+        <div class="face f6">;</div>
+      </div></div>
+      <div class="showcase-title">CODE SPRINT</div>
+      <p class="showcase-sub">Timed multi-round coding championship — solve the logic quest, battle the code arena, and debug your way to the top of the live leaderboard.</p>
+      <div class="stickers">
+        <span class="sticker">💻</span><span class="sticker">🏆</span><span class="sticker">⚡</span><span class="sticker">🚀</span><span class="sticker">🎯</span>
+      </div>
+      <div class="mini-status">
+        <span class="stat"><span class="label">Status</span><span class="value small" id="compStatus">—</span></span>
+        <span class="stat"><span class="label">Phase</span><span class="value small" id="compPhase">—</span></span>
+        <span class="stat"><span class="label">Time Left</span><span class="timer" id="compTimer" style="font-size:20px">--:--:--</span></span>
+      </div>
+    </div>
+
+    <div class="card auth-card" style="max-width:none;">
+      <div class="row"><span class="ic">🔐</span>
+        <div><h2 style="margin:0">Team Login</h2><span class="small-muted">Enter your team ID to join the arena</span></div>
+      </div>
+      <hr class="hr" />
+      <form id="loginForm">
+        <label for="teamId">Team ID</label>
+        <input id="teamId" placeholder="e.g. T01" autocomplete="username" required />
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+        <div style="height:18px"></div>
+        <button class="btn block" type="submit">Enter the Arena ⚡</button>
+      </form>
+      <div id="loginError" class="small-muted" style="color:var(--red); margin-top:10px;"></div>
+      <hr class="hr" />
+      <div class="row"><span class="small-muted">Are you a judge?</span><a class="right" href="/admin.html">Judge / Admin →</a></div>
+      <div style="height:12px"></div>
+      <div class="row"><a class="btn ghost small" href="/leaderboard.html">📊 Leaderboard</a><a class="btn ghost small" href="/results.html">🏆 Results</a></div>
+    </div>
+  </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/login.js"></script>
+</body>
+</html>

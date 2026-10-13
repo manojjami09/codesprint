@@ -16,16 +16,10 @@ npm start
 ```
 
 Open:
-- **Teams portal:** http://localhost:3000/  (login with a team account)
-- **Judge / Admin:** http://localhost:3000/admin.html
+- **Teams portal:** `/` (Login with assigned team account)
+- **Judge / Admin:** `/admin.html` (Administrator access)
 
-| Account | Login | Password |
-|---|---|---|
-| Teams | `T01` … `T36` | `sprint123` |
-| Judge | `judge` | `judge123` |
-| Admin | `admin` | `admin123` |
-
-> Change passwords immediately: in the admin dashboard → **Teams** tab (edit team) or edit the admin rows in `data/codesprint.db`.
+> Note: Contest credentials (team accounts and judge/admin passwords) are distributed privately by event organizers.
 
 To wipe all data and start fresh: stop the server, run `npm run reset`, then `npm start`.
 

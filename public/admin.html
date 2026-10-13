@@ -84,7 +84,7 @@
           <div class="section-head"><span class="ic">➕</span><h4 style="margin:0">Add Team</h4></div>
           <label>Team ID</label><input id="newTeamCode" placeholder="T37" />
           <label>Team Name</label><input id="newTeamName" placeholder="Team Phoenix" />
-          <label>Password</label><input id="newTeamPass" placeholder="sprint123" />
+          <label>Password</label><input id="newTeamPass" type="password" placeholder="Password" />
           <div style="height:12px"></div>
           <button class="btn small" onclick="addTeam()">Add Team</button>
         </div>
@@ -93,7 +93,7 @@
           <label>Count</label><input id="bulkCount" type="number" value="10" min="1" max="50" />
           <label>ID Prefix</label><input id="bulkPrefix" value="T" />
           <label>Name Prefix</label><input id="bulkNamePrefix" value="Team " />
-          <label>Password</label><input id="bulkPass" value="sprint123" />
+          <label>Password</label><input id="bulkPass" type="password" placeholder="Password" />
           <div style="height:12px"></div>
           <button class="btn small" onclick="bulkTeams()">Generate</button>
         </div>

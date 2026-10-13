@@ -128,10 +128,19 @@ router.get('/question/:id', (req, res) => {
   const hintUsed = !!db.prepare('SELECT 1 FROM hint_usage WHERE team_id = ? AND question_id = ?').get(req.session.teamId, q.id);
   const best = db.prepare(`SELECT MAX(score) AS s, COUNT(*) AS n FROM submissions WHERE team_id = ? AND question_id = ? AND mode = 'submit'`).get(req.session.teamId, q.id);
 
+  const allInRound = db.prepare(
+    `SELECT id FROM questions WHERE active = 1 AND round = ? ORDER BY is_bonus, order_index, id`
+  ).all(q.round).map((x) => x.id);
+  const curIdx = allInRound.indexOf(q.id);
+  const prevId = curIdx > 0 ? allInRound[curIdx - 1] : null;
+  const nextId = (curIdx >= 0 && curIdx < allInRound.length - 1) ? allInRound[curIdx + 1] : null;
+
   res.json({
     ok: true,
     roundStatus: rstat,
     acceptsSubmissions: timer.roundAcceptsSubmissions(q.round),
+    prevId,
+    nextId,
     question: {
       id: q.id, round: q.round, stage: q.stage, section: q.section, qtype: q.qtype,
       title: q.title, statement: q.statement, input_desc: q.input_desc, output_desc: q.output_desc,

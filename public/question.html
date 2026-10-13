@@ -15,7 +15,10 @@
     <a class="link" href="/leaderboard.html"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V12M12 20V4M18 20V9"/></svg>Leaderboard</a>
   </nav>
   <div class="nav-right">
-    <div class="nav-extra"><span class="badge locked" id="roundStatus"></span></div>
+    <div class="nav-extra">
+      <span class="user-chip" id="navTeamChip" style="display:none"><span class="dot"></span><span id="navTeam"></span></span>
+      <span class="badge" id="roundStatus" style="display:none"></span>
+    </div>
     <button class="icon-btn theme-toggle" type="button"></button>
     <button class="btn ghost small" onclick="logout()">Logout</button>
     <button class="icon-btn nav-burger" type="button" aria-label="Menu"></button>
@@ -35,10 +38,16 @@
 
   <!-- DETAIL VIEW -->
   <div id="detailView" class="hidden">
-    <div class="row" style="margin-bottom:14px;">
-      <a class="btn ghost small" href="/dashboard.html" type="button">← Dashboard</a>
-      <button class="btn ghost small" id="backList" type="button">← Question List</button>
-      <span class="right" id="detailBadges"></span>
+    <div class="row" style="margin-bottom:14px;justify-content:space-between;align-items:center;">
+      <div class="row" style="gap:8px;">
+        <a class="btn ghost small" href="/dashboard.html" type="button">← Dashboard</a>
+        <button class="btn ghost small" id="backList" type="button">📋 Questions</button>
+      </div>
+      <div class="row" style="gap:8px;">
+        <button class="btn ghost small" id="prevBtn" type="button" style="display:none">◀ Previous</button>
+        <button class="btn ghost small" id="nextBtn" type="button" style="display:none">Next ▶</button>
+      </div>
+      <div id="detailBadges"></div>
     </div>
     <div class="grid cols-2" style="align-items:start;">
       <div class="card">
@@ -53,10 +62,10 @@
       </div>
 
       <div class="card">
-        <div class="row">
+        <div class="row" id="langRow">
           <span class="ic">⌨️</span>
           <select id="language" style="max-width:220px;"></select>
-          <button class="btn ghost small right" id="hintBtn" type="button">💡 Hint</button>
+          <span class="right"></span>
         </div>
         <div style="height:12px"></div>
         <div class="editor-wrap"><div id="editorHost"></div></div>
@@ -65,10 +74,11 @@
         <label id="stdinLabel">Custom Input (stdin) <span class="small-muted">— optional, used by Run</span></label>
         <textarea id="stdin" placeholder="Enter input for your program..." style="min-height:70px;font-family:var(--font-mono);"></textarea>
         <div style="height:12px"></div>
-        <div class="row">
+        <div class="row actions" style="flex-wrap:wrap;align-items:center;gap:10px">
           <button class="btn ghost" id="runBtn" type="button">▶ Run / Test</button>
-          <button class="btn green" id="submitBtn" type="button">✓ Submit</button>
-          <span class="right small-muted" id="bestInfo"></span>
+          <button class="btn green" id="submitBtn" type="button">✔ Submit</button>
+          <button class="btn ghost small" id="hintBtn" type="button">💡 Hint</button>
+          <span class="right small-muted" id="bestInfo" style="flex:1 1 auto;text-align:right"></span>
         </div>
         <div style="height:12px"></div>
         <div id="resultArea"></div>

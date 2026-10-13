@@ -253,4 +253,22 @@ router.post('/config', (req, res) => {
   res.json({ ok: true, state: timer.getState() });
 });
 
+router.post('/reset-contest', (req, res) => {
+  const dbm = require('../db');
+  db.transaction(() => {
+    db.prepare('DELETE FROM submissions').run();
+    db.prepare('DELETE FROM hint_usage').run();
+    db.prepare('DELETE FROM activity_log').run();
+    dbm.setSetting('competition_status', 'not_started');
+    dbm.setSetting('leaderboard_frozen', false);
+    dbm.setSetting('results_published', false);
+    dbm.setSetting('message', '');
+  })();
+  realtime.broadcastState();
+  realtime.broadcastLeaderboard();
+  res.json({ ok: true, message: 'All test submissions and scores have been wiped clean!' });
+});
+
 module.exports = router;
+
+

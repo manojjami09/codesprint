@@ -109,6 +109,33 @@ async function openQuestion(id) {
 
   $('bestInfo').textContent = `Best: ${data.bestScore} / ${q.marks} • ${data.attempts} attempt(s)`;
 
+  // Prev / Next question navigation
+  const prevBtn = $('prevBtn');
+  const nextBtn = $('nextBtn');
+  if (prevBtn) {
+    if (data.prevId) {
+      prevBtn.style.display = 'inline-flex';
+      prevBtn.onclick = () => openQuestion(data.prevId);
+    } else {
+      prevBtn.style.display = 'none';
+    }
+  }
+  if (nextBtn) {
+    if (data.nextId) {
+      nextBtn.style.display = 'inline-flex';
+      nextBtn.onclick = () => openQuestion(data.nextId);
+    } else {
+      nextBtn.style.display = 'none';
+    }
+  }
+
+  // Update navbar round badge
+  if ($('roundStatus') && data.roundStatus) {
+    $('roundStatus').className = 'badge ' + data.roundStatus;
+    $('roundStatus').textContent = data.roundStatus.toUpperCase();
+    $('roundStatus').style.display = 'inline-flex';
+  }
+
   // language select
   const langs = data.languages || {};
   const opts = Object.entries(langs).map(([k, v]) =>
@@ -124,22 +151,29 @@ async function openQuestion(id) {
   const hasOptionsBlock = /Options:\s*\n/i.test(stmt) || /\([A-Da-d]\)\s/.test(stmt);
   const isMcq = (q.qtype === 'mcq') || (q.qtype === 'logic' && hasOptionsBlock);
 
+  // Hide language row if MCQ
+  if ($('langRow')) {
+    $('langRow').style.display = isMcq ? 'none' : 'flex';
+  }
+
   // editor vs mcq
   const host = $('editorHost');
   const mcqHost = $('mcqHost');
   if (isMcq) {
     host.innerHTML = '';
     if (mcqHost) { mcqHost.innerHTML = ''; mcqHost.style.display = 'flex'; mcqHost.classList.remove('hidden'); }
+    const edWrap = document.querySelector('.editor-wrap');
+    if (edWrap) edWrap.style.display = 'none';
     const mcqOpts = [];
     const re = /\b([A-Da-d])\)\s+([^\n\r]+?)(?=\s*\b[A-Da-d]\)|$)/g;
     let m; const full = stmt;
     while ((m = re.exec(full))) { mcqOpts.push({ letter: m[1].toUpperCase(), text: m[2].trim() }); }
     let mcqAns = '';
     mcqHost.innerHTML = mcqOpts.map((o) => `
-      <label class="card" style="padding:12px 14px;cursor:pointer;display:flex;gap:12px;align-items:center">
-        <input type="radio" name="mcq" value="${escapeHtml(o.letter)}" style="transform:scale(1.2)">
-        <div style="font-weight:800">${o.letter})</div>
-        <div>${escapeHtml(o.text)}</div>
+      <label class="mcq-option">
+        <input type="radio" name="mcq" value="${escapeHtml(o.letter)}">
+        <span class="mcq-badge">${escapeHtml(o.letter)}</span>
+        <span class="mcq-text">${escapeHtml(o.text)}</span>
       </label>`).join('');
     mcqHost.querySelectorAll('input[name="mcq"]').forEach((r) => r.addEventListener('change', (e) => { mcqAns = e.target.value; }));
     if (window.__mcqSubmit) { $('submitBtn').removeEventListener('click', window.__mcqSubmit); }
@@ -148,15 +182,21 @@ async function openQuestion(id) {
       if (!current) return;
       if (!mcqAns) { toast('Please select an option', 'err'); return; }
       if (!confirm('Submit this answer?')) return;
+      // disable options after submit
+      mcqHost.querySelectorAll('input[name="mcq"]').forEach((el) => { el.disabled = true; });
+      mcqHost.querySelectorAll('.mcq-option').forEach((el) => { el.style.opacity = '0.7'; el.style.cursor = 'not-allowed'; });
+      $('submitBtn').disabled = true;
       $('resultArea').innerHTML = '<span class="small-muted">Submitting...</span>';
       try {
         const r = await api('/team/submit', { method: 'POST', body: { questionId: current.question.id, code: mcqAns, language: 'text' } });
         renderSubmit(r);
-      } catch (e) { $('resultArea').innerHTML = `<span style="color:var(--red)">${escapeHtml(e.message)}</span>`; }
+      } catch (e) { $('resultArea').innerHTML = `<span style="color:var(--red)">${escapeHtml(e.message)}</span>`; $('submitBtn').disabled = false; }
     };
     $('submitBtn').addEventListener('click', window.__mcqSubmit);
   } else {
     if (mcqHost) { mcqHost.innerHTML = ''; mcqHost.style.display = 'none'; mcqHost.classList.add('hidden'); }
+    const edWrap = document.querySelector('.editor-wrap');
+    if (edWrap) edWrap.style.display = '';
     if (window.__mcqSubmit) { $('submitBtn').removeEventListener('click', window.__mcqSubmit); window.__mcqSubmit = null; }
     editor = await initEditor(host, q.starter_code || '', $('language').value);
   }
@@ -272,6 +312,14 @@ document.addEventListener('themechange', (e) => {
 
 // -------------------------------------------------------------- boot
 (async function boot() {
+  try {
+    const me = await api('/team/me');
+    if (me && me.team && $('navTeam')) {
+      $('navTeam').textContent = me.team.name + ' (' + me.team.code + ')';
+      if ($('navTeamChip')) $('navTeamChip').style.display = 'inline-flex';
+    }
+  } catch (e) { /* ignore */ }
+
   const id = params.get('id');
   if (id) { await openQuestion(Number(id)); }
   else { await showList(Number(params.get('round') || 1)); }

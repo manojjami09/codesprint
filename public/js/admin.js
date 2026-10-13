@@ -450,9 +450,18 @@ async function saveSchedule() {
   toast('Schedule saved', 'ok'); refreshAll();
 }
 
-function resetDb() {
-  alert('To fully reset: stop the server, run "npm run reset", then start again with "npm start".');
+async function resetDb() {
+  if (!confirm('⚠ WARNING: This will clear ALL test submissions, scores, hints, and activity logs!\n\nAre you sure you want to reset the contest data?')) return;
+  try {
+    const r = await api('/admin/reset-contest', { method: 'POST' });
+    toast(r.message || 'Contest data reset successfully!', 'ok');
+    refreshAll();
+    loadConfig();
+  } catch (e) {
+    toast(e.message, 'err');
+  }
 }
+
 
 // ---------------------------------------------------------------- modal helpers
 function openModal(html, wide) {

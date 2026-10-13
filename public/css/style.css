@@ -303,6 +303,10 @@ input, select, textarea {
   color: var(--text); padding: 12px 14px; font-size: 14px; font-family: var(--font-body); outline: none;
   transition: border-color .2s, box-shadow .2s;
 }
+input[type="radio"], input[type="checkbox"] {
+  width: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important;
+  cursor: pointer !important; flex: none !important;
+}
 input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
 input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent); }
 select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%230bb7f0' stroke-width='2' fill='none' stroke-linecap='round'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
@@ -313,9 +317,65 @@ textarea { resize: vertical; min-height: 90px; }
 @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
 
 /* ============================================================
+   MCQ OPTIONS
+   ============================================================ */
+.mcq-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 14px 18px !important;
+  background: var(--card-grad) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  cursor: pointer !important;
+  transition: all .2s ease !important;
+  user-select: none;
+}
+.mcq-option:hover {
+  border-color: var(--accent) !important;
+  transform: translateX(4px);
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel-solid)) !important;
+}
+.mcq-option:has(input:checked) {
+  border-color: var(--accent) !important;
+  background: color-mix(in srgb, var(--accent) 15%, var(--panel-solid)) !important;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent) !important;
+}
+.mcq-option input[type="radio"] {
+  width: 20px !important;
+  height: 20px !important;
+  accent-color: var(--accent) !important;
+  margin: 0 !important;
+  flex: none !important;
+  cursor: pointer !important;
+}
+.mcq-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 14px;
+  flex: none;
+}
+.mcq-text {
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* ============================================================
    BADGES & PILLS
    ============================================================ */
 .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: .3px; border: 1px solid var(--border); }
+.badge:empty, .pill:empty { display: none !important; }
 .badge.locked { color: var(--muted); background: var(--icon-bg); }
 .badge.active { color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); border-color: color-mix(in srgb, var(--accent) 48%, transparent); box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 26%, transparent); animation: badgePulse 2s ease-in-out infinite; }
 .badge.completed { color: var(--green); background: color-mix(in srgb, var(--green) 15%, transparent); border-color: color-mix(in srgb, var(--green) 48%, transparent); box-shadow: 0 0 14px color-mix(in srgb, var(--green) 22%, transparent); }
